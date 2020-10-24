@@ -33,7 +33,10 @@ func GinHandler(s *Service) gin.HandlerFunc {
 	}
 }
 func (s *Service) AutoMigrate() {
-	s.DB.AutoMigrate(models.User{}, models.Balance{})
+	s.DB.AutoMigrate(models.User{}, models.Balance{}, models.Session{}, models.Transaction{})
 	s.DB.Model(&models.Balance{}).AddForeignKey("user_id", "users(user_id)", "RESTRICT", "RESTRICT")
+	s.DB.Model(&models.Session{}).AddForeignKey("user_id", "users(user_id)", "RESTRICT", "RESTRICT")
+	s.DB.Model(&models.Transaction{}).AddForeignKey("from", "users(user_id)", "RESTRICT", "RESTRICT")
+	s.DB.Model(&models.Transaction{}).AddForeignKey("to", "users(user_id)", "RESTRICT", "RESTRICT")
 
 }

@@ -18,6 +18,10 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Invalid param(s)"})
 		return
 	}
+	if err = registerRequest.Validate(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
 	service := c.MustGet("service").(*repository.Service)
 	EncryptPassword(&registerRequest)
 	if _, err = service.Register(registerRequest); err != nil && err.Error() != "record not found" {
